@@ -1,26 +1,29 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .forms import PostForm
-from .models import Group, Post
+from .models import Group, Post, User
 
-User = get_user_model()
 PAGE_LIMIT = 10
+
+
+def pagination(request, post_list):
+    paginator = Paginator(post_list, PAGE_LIMIT)
+    page_number = request.GET.get('page')
+    return paginator.get_page(page_number)
 
 
 def index(request):
     template = 'posts/index.html'
-    text = 'Это главная страница проекта Yatube'
 
     post_list = Post.objects.select_related("group")
-    paginator = Paginator(post_list, PAGE_LIMIT)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+
+    page_obj = pagination(request=request, post_list=post_list)
 
     context = {
-        'text': text,
         'page_obj': page_obj,
     }
 
@@ -31,10 +34,9 @@ def group_posts(request, slug):
     template = 'posts/group_list.html'
 
     group = get_object_or_404(Group, slug=slug)
-    post_list = group.posts.order_by('-pub_date')
-    paginator = Paginator(post_list, PAGE_LIMIT)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    post_list = group.posts.all()
+
+    page_obj = pagination(request=request, post_list=post_list)
 
     context = {
         'group': group,
@@ -46,14 +48,14 @@ def group_posts(request, slug):
 def profile(request, username):
     template = 'posts/profile.html'
 
-    username = get_object_or_404(User, username=username)
-    post_list = username.posts.order_by('-pub_date')
-    paginator = Paginator(post_list, PAGE_LIMIT)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    user = get_object_or_404(User, username=username)
+    post_list = user.posts.all()
+
+    page_obj = pagination(request=request, post_list=post_list)
+
     context = {
-        'post_count': post_list.count(),
-        'username': username,
+        'post_list': post_list,
+        'user': user,
         'page_obj': page_obj,
     }
     return render(request, template, context)
@@ -61,22 +63,21 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     template = 'posts/post_detail.html'
-    post_object = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
 
-    posts = Post.objects.filter(author=post_object.author)
+    posts = Post.objects.filter(author=post.author)
 
     context = {
-        'post_count': posts.count(),
-        'post': post_object,
+        'posts': posts,
+        'post': post,
     }
     return render(request, template, context)
 
 
 @login_required
 def post_create(request):
-    is_edit = False
     template = 'posts/create_post.html'
-
+    form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -84,26 +85,24 @@ def post_create(request):
             obj.author = request.user
             obj.save()
             return redirect(f"/profile/{request.user}/")
-
-    form = PostForm()
-    return render(request, template, {'form': form, 'is_edit': is_edit})
+        
+    return render(request, template, {'form': form,"form_errors": form.errors ,'is_edit': False})
 
 
 @login_required
 def post_edit(request, post_id):
-    is_edit = True
     template = 'posts/create_post.html'
+    posts = Post.objects.select_related('group')
+    post = get_object_or_404(posts, id=post_id)
 
-    post_object = Post.objects.get(id=post_id)
-
-    if post_object.author != request.user:
-        return redirect('/')
+    if post.author != request.user:
+        return HttpResponseRedirect(reverse('posts:index'))
 
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post_object)
+        form = PostForm(request.POST or None, instance=post)
         if form.is_valid():
             form.save()
-            return redirect(f"/posts/{post_id}")
+            return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id,])) 
 
     form = PostForm()
-    return render(request, template, {'form': form, 'is_edit': is_edit})
+    return render(request, template, {'form': form, 'is_edit': True})

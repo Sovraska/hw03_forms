@@ -10,5 +10,3 @@ class SignUp(CreateView):
     template_name = 'users/signup.html'
 
 
-class PasswordResetView(CreateView):
-    form_class = CreationForm

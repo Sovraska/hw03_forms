@@ -21,14 +21,14 @@
         Автор: {{ post.author }}
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        Всего постов автора:  <span >{{ post_count }}</span> 
+        Всего постов автора:  <span >{{ posts.count }}</span> 
       </li>
       <li class="list-group-item">
         <a href="{% url 'posts:profile' post.author %}">
           все посты пользователя: {{ post.author.get_full_name }}
         </a>
       </li>
-      {% if user.username == post.author.username %}
+      {% if user == post.author %}
         <li class="list-group-item">
           <a href="{% url 'posts:post_edit' post.id  %}">
             Изменить пост 
@@ -41,7 +41,7 @@
   <article class="col-12 col-md-9">
     <p>
       {% autoescape on %}
-        <p>{{ post.text }}</p>
+        <p>{{ post.text|linebreaksbr }}</p>
       {% endautoescape %}
     </p>
   </article

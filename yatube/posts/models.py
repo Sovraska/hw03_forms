@@ -13,30 +13,36 @@ class Group(models.Model):
         return self.title
 
     class Meta:
+        verbose_name = 'Группа'
         verbose_name_plural = "Группы"
 
 
 class Post(models.Model):
-    text = models.TextField()
+    text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
         auto_now_add=True,
+        verbose_name='Дата публикации'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='posts',
+        verbose_name='Автор'
     )
     group = models.ForeignKey(
         Group,
         blank=True,
         null=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         related_name='posts',
+        verbose_name='Группа'
     )
 
     def __str__(self):
-        return self.text
+        TEXT_LIMIT = 30
+        return self.text[:TEXT_LIMIT]
 
     class Meta:
+        verbose_name = 'Пост'
         verbose_name_plural = "Посты"
-        ordering = ['-pub_date']
+        ordering = [('-pub_date'),]

@@ -10,7 +10,7 @@
   </p>
   {% for post in page_obj %}
     <hr>
-    {% include 'posts/includes/article.html' %}
+    {% include 'posts/includes/article.html' with index=false %}
     <a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
     <br>
     {% empty %}

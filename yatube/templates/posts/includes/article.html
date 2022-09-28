@@ -7,6 +7,11 @@
     <li>дата публикации: {{ post.pub_date|date:"d E Y" }}</li>
   </ul>      
   {% autoescape on %}
-    <p>{{ post.text }}</p>
+    <p>{{ post.text|linebreaksbr }}</p>
   {% endautoescape %}
+  {% if index %}
+    {% if post.group %}
+      <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы: {{ post.group.title }}</a> 
+    {% endif %}
+  {% endif %}
 </article>    
