@@ -96,7 +96,6 @@ def post_edit(request, post_id):
 
     post_object = Post.objects.get(id=post_id)
 
-
     if post_object.author != request.user:
         return redirect('/')
 
