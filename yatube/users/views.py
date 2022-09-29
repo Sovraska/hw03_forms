@@ -13,10 +13,9 @@ class SignUp(CreateView):
 
 
 class PasswordResetView(PasswordResetView):
-    send_mail(
-            'Тема письма',
-            'Текст письма.',
-            'from@example.com',
-            ['to@example.com'],
-            fail_silently=False,
+    send_mail('Тема письма',
+             'Текст письма.',
+             'from@example.com',
+             ['to@example.com'],
+             fail_silently=False,
     )

@@ -13,9 +13,8 @@ app_name = 'users'
 
 urlpatterns = [
     path('signup/',
-         views.SignUp.as_view(
-            template_name='users/signup.html'),
-            name='signup'
+         views.SignUp.as_view(template_name='users/signup.html'),
+                              name='signup'
     ),
     path('logout/',
          LogoutView.as_view(template_name='users/logged_out.html'),
