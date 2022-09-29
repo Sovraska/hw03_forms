@@ -5,7 +5,7 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetConfirmView,
                                        PasswordResetDoneView,
                                        PasswordResetView)
-from django.urls import path
+from django.urls import path, reverse_lazy
 
 from . import views
 
@@ -24,22 +24,18 @@ urlpatterns = [
         name='login'
     ),
     path(
-        'password_change/',
-        PasswordChangeView.as_view(
-            template_name='users/password_change_form.html'),
-        name='password_change'
-    ),
-    path(
         'password_change/done/',
         PasswordChangeDoneView.as_view(
-            template_name='users/password_change_form.html'),
+            template_name='users/password_change_done.html'),
         name='password_change_done'
     ),
     path(
-        'password_reset/',
-        PasswordResetView.as_view(
-            template_name='users/password_reset_form.html'),
-        name='password_reset'
+        'password_change/',
+        PasswordChangeView.as_view(
+            template_name='users/password_change_form.html',
+            success_url=reverse_lazy('users:password_change_done')),
+            name='password_change',
+            
     ),
     path(
         'password_reset/done/',
@@ -48,10 +44,10 @@ urlpatterns = [
         name='password_reset_done'
     ),
     path(
-        'reset/<uidb64>/<token>',
-        PasswordResetConfirmView.as_view(
-            template_name='users/password_reset_confirm.html'),
-        name='password_reset_confirm'
+        'password_reset/',
+        PasswordResetView.as_view(
+            template_name='users/password_reset_form.html'),
+        name='password_reset'
     ),
     path(
         'reset/done/',
@@ -59,4 +55,10 @@ urlpatterns = [
             template_name='users/password_reset_complete.html'),
         name='password_reset_complite'
     ),
+        path('reset/<str:uidb64>/<str:token>',
+        PasswordResetConfirmView.as_view(
+            template_name='users/password_reset_confirm.html'),
+        name='password_reset_confirm'
+    )
+
 ]
