@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -52,12 +52,11 @@ def profile(request, username):
     post_list = user.posts.all()
 
     page_obj = pagination(request=request, post_list=post_list)
-
+    #иначе авто тесты на сайте не проходит ему нужно в username передавать автора
     context = {
-
         'post_list': post_list,
         'user': user,
-        'username': user, #иначе авто таесты на сайте не проходит ему нужно в username передавать автора 
+        'username': user, 
         'page_obj': page_obj,
     }
     return render(request, template, context)
@@ -86,7 +85,8 @@ def post_create(request):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
-            return HttpResponseRedirect(reverse("posts:profile", args=[request.user, ]))
+            return HttpResponseRedirect(reverse("posts:profile",
+                                                args=[request.user, ]))
 
     context = {
         'form': form,
@@ -94,7 +94,6 @@ def post_create(request):
         'is_edit': False}
 
     return render(request, template, context)
-
 
 
 @login_required
