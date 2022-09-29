@@ -11,11 +11,12 @@ class SignUp(CreateView):
     success_url = reverse_lazy('posts:index')
     template_name = 'users/signup.html'
 
+
 class PasswordResetView(PasswordResetView):
     send_mail(
-    'Тема письма',
-    'Текст письма.',
-    'from@example.com',
-    ['to@example.com'],
-    fail_silently=False,
+            'Тема письма',
+            'Текст письма.',
+            'from@example.com',
+            ['to@example.com'],
+            fail_silently=False,
     )
