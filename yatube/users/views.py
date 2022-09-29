@@ -10,6 +10,7 @@ class SignUp(CreateView):
     success_url = reverse_lazy('posts:index')
     template_name = 'users/signup.html'
 
+
 def send_msg(email):
 
     send_mail('Тема письма',
@@ -18,5 +19,3 @@ def send_msg(email):
               ['to@example.com'],
               fail_silently=False,
               )
-
-
