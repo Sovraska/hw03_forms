@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
 from .forms import PostForm
@@ -52,11 +51,10 @@ def profile(request, username):
     post_list = user.posts.all()
 
     page_obj = pagination(request=request, post_list=post_list)
-# иначе авто тесты на сайте не проходит ему нужно в username передавать автора
+
     context = {
         'post_list': post_list,
-        'user': user,
-        'username': user,
+        'author': user,
         'page_obj': page_obj,
     }
     return render(request, template, context)
@@ -66,10 +64,7 @@ def post_detail(request, post_id):
     template = 'posts/post_detail.html'
     post = get_object_or_404(Post, id=post_id)
 
-    posts = Post.objects.filter(author=post.author)
-
     context = {
-        'posts': posts,
         'post': post,
     }
     return render(request, template, context)
@@ -78,19 +73,16 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     template = 'posts/create_post.html'
-    form = PostForm()
+    form = PostForm(request.POST or None)
     if request.method == 'POST':
-        form = PostForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
-            return HttpResponseRedirect(reverse("posts:profile",
-                                                args=[request.user, ]))
+            return redirect("posts:profile", request.user)
 
     context = {
         'form': form,
-        "form_errors": form.errors,
         'is_edit': False}
 
     return render(request, template, context)
@@ -101,15 +93,14 @@ def post_edit(request, post_id):
     template = 'posts/create_post.html'
     posts = Post.objects.select_related('group')
     post = get_object_or_404(posts, id=post_id)
-    form = PostForm()
+    form = PostForm(request.POST or None, instance=post)
+
     if post.author != request.user:
-        return HttpResponseRedirect(reverse('posts:index'))
+        return redirect('posts:index')
 
     if request.method == 'POST':
-        form = PostForm(request.POST or None, instance=post)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('posts:post_detail',
-                                                args=[post_id, ]))
+            return redirect("posts:post_detail", post.id)
 
     return render(request, template, {'form': form, 'is_edit': True})

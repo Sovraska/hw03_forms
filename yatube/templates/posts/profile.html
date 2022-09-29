@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Профиль пользователя {{ user.get_full_name}} </h1>
-  <h3>Всего постов: {{ post_list.count }}</h3>
+  <h1>Профиль пользователя {{ author.get_full_name}} </h1>
+  <h3>Всего постов: {{ author.posts.count }}</h3>
     {% for post in page_obj %}
       <article>
         <ul>
