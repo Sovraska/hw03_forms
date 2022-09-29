@@ -87,8 +87,8 @@ def post_create(request):
             return redirect(f"/profile/{request.user}/")
 
     context = {
-        'form': form, 
-        "form_errors": form.errors, 
+        'form': form,
+        "form_errors": form.errors,
         'is_edit': False}
 
     return render(request, template, context)
@@ -108,7 +108,7 @@ def post_edit(request, post_id):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('posts:post_detail',
-                                                args=[post_id,]))
+                                                args=[post_id, ]))
 
     form = PostForm()
     return render(request, template, {'form': form, 'is_edit': True})
