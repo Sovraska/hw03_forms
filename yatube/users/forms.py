@@ -13,4 +13,4 @@ class CreationForm(UserCreationForm):
 class PasswordChangeForm(PasswordChangeForm):
     class Meta:
         model = User
-        fields = ('password_old', 'new_password1','new_password2')
+        fields = ('password_old', 'new_password1', 'new_password2')
