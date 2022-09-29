@@ -85,8 +85,13 @@ def post_create(request):
             obj.author = request.user
             obj.save()
             return redirect(f"/profile/{request.user}/")
-        
-    return render(request, template, {'form': form,"form_errors": form.errors ,'is_edit': False})
+
+    context = {
+        'form': form, 
+        "form_errors": form.errors, 
+        'is_edit': False}
+
+    return render(request, template, context)
 
 
 @login_required
@@ -102,7 +107,8 @@ def post_edit(request, post_id):
         form = PostForm(request.POST or None, instance=post)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('posts:post_detail', args=[post_id,])) 
+            return HttpResponseRedirect(reverse('posts:post_detail',
+                                                args=[post_id,]))
 
     form = PostForm()
     return render(request, template, {'form': form, 'is_edit': True})

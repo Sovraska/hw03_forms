@@ -13,4 +13,3 @@ class PostEditForm(ModelForm):
     class Meta:
         model = Post
         fields = ['text', 'group']
-
