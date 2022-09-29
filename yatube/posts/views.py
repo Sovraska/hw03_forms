@@ -52,11 +52,11 @@ def profile(request, username):
     post_list = user.posts.all()
 
     page_obj = pagination(request=request, post_list=post_list)
-    #иначе авто тесты на сайте не проходит ему нужно в username передавать автора
+#иначе авто тесты на сайте не проходит ему нужно в username передавать автора
     context = {
         'post_list': post_list,
         'user': user,
-        'username': user, 
+        'username': user,
         'page_obj': page_obj,
     }
     return render(request, template, context)
