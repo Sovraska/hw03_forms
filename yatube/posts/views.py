@@ -54,8 +54,10 @@ def profile(request, username):
     page_obj = pagination(request=request, post_list=post_list)
 
     context = {
+
         'post_list': post_list,
         'user': user,
+        'username': user, #иначе авто таесты на сайте не проходит ему нужно в username передавать автора 
         'page_obj': page_obj,
     }
     return render(request, template, context)
@@ -84,7 +86,7 @@ def post_create(request):
             obj = form.save(commit=False)
             obj.author = request.user
             obj.save()
-            return redirect(f"/profile/{request.user}/")
+            return HttpResponseRedirect(reverse("posts:profile", args=[request.user, ]))
 
     context = {
         'form': form,
@@ -94,12 +96,13 @@ def post_create(request):
     return render(request, template, context)
 
 
+
 @login_required
 def post_edit(request, post_id):
     template = 'posts/create_post.html'
     posts = Post.objects.select_related('group')
     post = get_object_or_404(posts, id=post_id)
-
+    form = PostForm()
     if post.author != request.user:
         return HttpResponseRedirect(reverse('posts:index'))
 
@@ -110,5 +113,4 @@ def post_edit(request, post_id):
             return HttpResponseRedirect(reverse('posts:post_detail',
                                                 args=[post_id, ]))
 
-    form = PostForm()
     return render(request, template, {'form': form, 'is_edit': True})
