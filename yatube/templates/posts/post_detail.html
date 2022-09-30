@@ -5,14 +5,14 @@
 {% block content %}
 <h1> Информация о Посте № {{ post.pk }}</h1>
   <aside class="col-12 col-md-3">
-    <ul class="list-group list-group-flush">
+    <ul class="list-group ">
       <li class="list-group-item">
         Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
       {% if post.group %}
       <li class="list-group-item">
         Группа: {{ post.group }}
-        <a href="{% url 'posts:group_list' post.group.slug %}">
+        <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">
           все записи группы
         </a>
       </li>
@@ -24,13 +24,15 @@
         Всего постов автора:  <span >{{ post.author.posts.count }}</span> 
       </li>
       <li class="list-group-item">
-        <a href="{% url 'posts:profile' post.author %}">
-          все посты пользователя: {{ post.author.get_full_name }}
+        все посты пользователя:
+        <br> 
+        <a href="{% url 'posts:profile' post.author %}" class="list-group-item-action">
+          {{ post.author.get_full_name }}
         </a>
       </li>
       {% if user == post.author %}
         <li class="list-group-item">
-          <a href="{% url 'posts:post_edit' post.id  %}">
+          <a href="{% url 'posts:post_edit' post.id  %}" class="list-group-item-action">
             Изменить пост 
           </a>
         </li> 

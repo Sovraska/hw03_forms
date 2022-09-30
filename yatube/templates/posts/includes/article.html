@@ -1,17 +1,27 @@
 <article>
-  <ul>
-    <li>
-      Автор: {{ post.author.get_full_name }}: {{ post.author}}
-      <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+  <div class="list-group">
+    <li class="list-group-item">
+      Автор:  {{ post.author.get_full_name }} 
+      {% if not profile %}
+        :
+        <a href="{% url 'posts:profile' post.author %}" class="list-group-item-action">
+           {{ post.author}}
+        </a>
+      {% endif %}
+      <br>
+      дата публикации: {{ post.pub_date|date:"d E Y" }}
+      <hr>
+      {% autoescape on %}
+        <p>{{ post.text|linebreaksbr|truncatechars:500 }}</p>
+      {% endautoescape %}
+      <div class="list-group">
+        {% if index %}
+          {% if post.group %}
+            <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item list-group-item-action">все записи группы: {{ post.group.title }}</a> 
+          {% endif %}
+        {% endif %}
+        <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item list-group-item-action">подробная информация </a>
+      </div>
     </li>
-    <li>дата публикации: {{ post.pub_date|date:"d E Y" }}</li>
-  </ul>      
-  {% autoescape on %}
-    <p>{{ post.text|linebreaksbr }}</p>
-  {% endautoescape %}
-  {% if index %}
-    {% if post.group %}
-      <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы: {{ post.group.title }}</a> 
-    {% endif %}
-  {% endif %}
+  </div>
 </article>    
