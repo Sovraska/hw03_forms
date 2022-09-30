@@ -5,14 +5,16 @@
 {% block content %}
   <div class="container py-5">
     <h1>Это главная страница проекта Yatube</h1>
-    {% for post in page_obj %}
-    <hr>
-    {% include 'posts/includes/article.html' with index=True %} 
-    <a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
-    <br>
-    {% empty %}
-      <p>Нет Постов</p>
-    {% endfor %}
+      {% for post in page_obj %}
+      <hr>
+        <div>
+          {% include 'posts/includes/article.html' with index=True %} 
+          <a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
+          <br>
+        </div>
+      {% empty %}
+        <p>Нет Постов</p>
+      {% endfor %}
     {% include 'posts/includes/paginator.html' %}
   </div> 
 {% endblock %}
