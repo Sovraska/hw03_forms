@@ -10,18 +10,21 @@
       {% endif %}
       <br>
       дата публикации: {{ post.pub_date|date:"d E Y" }}
+      <br>
+      {% if index %}
+      {% if post.group %}
+        Группа: <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">{{ post.group.title }}</a> 
+      {% endif %}
+    {% endif %}
       <hr>
+
       {% autoescape on %}
-        <p>{{ post.text|linebreaksbr|truncatechars:500 }}</p>
+        <p>
+          {{ post.text|linebreaksbr|truncatechars:500 }}
+          <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item-action">Читать далее </a>
+        </p>
       {% endautoescape %}
-      <div class="list-group">
-        {% if index %}
-          {% if post.group %}
-            <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item list-group-item-action">все записи группы: {{ post.group.title }}</a> 
-          {% endif %}
-        {% endif %}
-        <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item list-group-item-action">подробная информация </a>
-      </div>
+
     </li>
   </div>
 </article>    
