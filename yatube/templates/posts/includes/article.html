@@ -11,11 +11,9 @@
       <br>
       дата публикации: {{ post.pub_date|date:"d E Y" }}
       <br>
-      {% if index %}
-      {% if post.group %}
+      {% if index and post.group%}
         Группа: <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">{{ post.group.title }}</a> 
       {% endif %}
-    {% endif %}
       <hr>
 
       {% autoescape on %}

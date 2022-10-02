@@ -3,13 +3,13 @@
     Yatube
 {% endblock %}
 {% block content %}
-    <h1>Это главная страница проекта Yatube</h1>
-      <hr>
-      {% for post in page_obj %}
-          {% include 'posts/includes/article.html' with index=True %}
-        <br>
-      {% empty %}
-        <p>Нет Постов</p>
-      {% endfor %}
-    {% include 'posts/includes/paginator.html' %}
+  <h1>Это главная страница проекта Yatube</h1>
+    <hr>
+    {% for post in page_obj %}
+      {% include 'posts/includes/article.html' with index=True %}
+      <br>
+    {% empty %}
+      <p>Нет Постов</p>
+    {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
 {% endblock %}

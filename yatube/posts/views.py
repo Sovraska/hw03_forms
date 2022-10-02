@@ -47,8 +47,7 @@ def profile(request, username):
     template = 'posts/profile.html'
 
     author = get_object_or_404(User, username=username)
-
-    page_obj = pagination(request=request, post_list=author)
+    page_obj = pagination(request=request, post_list=author.posts.all())
 
     context = {
         'author': author,
