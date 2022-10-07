@@ -19,7 +19,7 @@
       {% autoescape on %}
         <p>
           {{ post.text|linebreaksbr|truncatechars:500 }}
-          <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item-action">Читать далее </a>
+          <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item-action">Читать далее </a> 
         </p>
       {% endautoescape %}
 

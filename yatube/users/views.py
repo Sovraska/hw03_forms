@@ -11,11 +11,3 @@ class SignUp(CreateView):
     template_name = 'users/signup.html'
 
 
-def send_msg(email):
-
-    send_mail('Тема письма',
-              'Текст письма.',
-              email,
-              ['to@example.com'],
-              fail_silently=False,
-              )

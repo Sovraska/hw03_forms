@@ -70,12 +70,11 @@ def post_detail(request, post_id):
 def post_create(request):
     template = 'posts/create_post.html'
     form = PostForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.author = request.user
-            obj.save()
-            return redirect("posts:profile", request.user)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.author = request.user
+        obj.save()
+        return redirect("posts:profile", request.user)
 
     context = {
         'form': form,
@@ -94,9 +93,9 @@ def post_edit(request, post_id):
     if post.author != request.user:
         return redirect('posts:index')
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect("posts:post_detail", post.id)
+    if form.is_valid():
+        form.save()
+        return redirect("posts:post_detail", post.id)
 
     return render(request, template, {'form': form, 'is_edit': True})
+
